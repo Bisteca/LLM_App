@@ -1,6 +1,6 @@
 import os
 
-os.environ['KEY_GROQ'] = "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"
+os.environ['KEY_GROQ'] = "API_KEY"
 
 config = {
     "host":"test.c61uo00q232v.us-east-1.rds.amazonaws.com",
