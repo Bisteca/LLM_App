@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tutor Interactivo de Programación — Renan Muniz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    :root{
+      --bg-0:#05060a;
+      --bg-1:#0a0f1a;
+      --accent:#00e5ff;
+      --accent-2:#27ffd6;
+      --text:#f5f5f5;   
+      --muted:#d1c4e9;  
+      --card:#0b1220cc; 
+      --border:#0df3ff33;
+      --shadow:#00e5ff33;
+      --code-bg:#0b0f14;
+    }
+
+    *{box-sizing:border-box}
+    html,body{
+      height:100%;
+      margin:0;
+      display:flex;
+      flex-direction:column;
+    }
+
+    body{
+      font-family:'Inter',sans-serif;
+      color:var(--text);
+
+      background: 
+        url("https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=100") no-repeat center center fixed,
+        radial-gradient(1200px 600px at 110% -10%, #07314133 0%, transparent 60%),
+        radial-gradient(900px 500px at -20% 10%, #003d4433 0%, transparent 60%),
+        linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 100%);
+      background-size: cover, auto, auto, auto;
+      overflow-x:hidden;
+    }
+
+    main{ flex:1; }
+
+    header{
+      position:relative;
+      padding:56px 6vw 32px;
+      background:rgba(0,0,0,0.55);
+      border-bottom:1px solid var(--border);
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:10px;
+      color:var(--accent); letter-spacing:.15em; text-transform:uppercase;
+      font-family:'Orbitron', sans-serif; font-weight:600; font-size:.78rem;
+    }
+    .badge::before{
+      content:""; width:72px; height:6px; border-radius:6px;
+      background:linear-gradient(90deg,var(--accent),transparent 70%);
+      box-shadow:0 0 14px var(--shadow);
+    }
+    h1{
+      font-family:'Orbitron', sans-serif;
+      font-weight:700; font-size:clamp(28px,5vw,56px);
+      line-height:1.05; margin:10px 0 8px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    }
+    .subtitle{
+      font-family:'Orbitron', sans-serif;
+      font-weight:600; letter-spacing:.08em;
+      color:var(--accent); font-size:clamp(14px,2.2vw,22px);
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+    }
+
+    .card{
+      margin:28px auto 0; width:min(980px,90vw);
+      background:rgba(10, 15, 20, 0.85);
+      backdrop-filter: blur(10px);
+      border:1px solid var(--border);
+      border-radius:16px; padding:22px;
+      box-shadow:0 0 0 1px #00e5ff11, 0 20px 60px #00101866;
+    }
+
+    .row{ display:flex; gap:12px; flex-wrap:wrap; }
+    .input{
+      flex:1 1 520px; min-height:52px; padding:14px 16px;
+      border-radius:12px; border:1px solid #0e243399;
+      background:#060b12; color:var(--text); outline:none;
+      font: 500 16px/1.2 'Inter', sans-serif;
+    }
+    .btn{
+      flex:0 0 auto;
+      padding:14px 22px; border:0; border-radius:12px;
+      background: radial-gradient(120% 120% at 0% 0%, var(--accent) 0%, var(--accent-2) 60%, #68fff0 100%);
+      color:#021316; font:700 14px/1 'Orbitron', sans-serif; letter-spacing:.08em;
+      cursor:pointer;
+    }
+
+    /* status de processamento */
+    .status{
+      display:none;
+      margin-top:12px;
+      font-size:0.95rem;
+      color:var(--muted);
+      font-style:italic;
+    }
+
+    .terminal{
+      margin-top:18px; border-radius:14px; overflow:hidden;
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, #050a10 0%, #07111b 100%);
+    }
+    .term-bar{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 14px; background:linear-gradient(180deg,#061824,#071b27);
+      border-bottom:1px solid #062432;
+    }
+    .term-title{font:600 12px 'Orbitron', sans-serif; letter-spacing:.12em; color:#7bdff2}
+    /* Parte dentro do seu style */
+.term-content {
+  padding: 24px 24px;
+  font-family: 'Inter', sans-serif; /* texto normal */
+  color: #e9f1ff;
+  line-height: 1.6;
+}
+
+.term-content h2, .term-content h3 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--accent);
+  margin-top: 24px;
+  margin-bottom: 12px;
+  text-shadow: 0 0 8px rgba(0,0,0,0.7);
+}
+
+.term-content p {
+  margin: 12px 0;
+  font-size: 1rem;
+}
+
+.term-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+}
+
+.term-content th, .term-content td {
+  border:1px solid #2b3a47;
+  padding:10px 14px;
+}
+
+.term-content th {
+  background: #1e293b;
+  color: var(--accent);
+}
+
+.term-content td {
+  background: #0f1b2a;
+  color: #cfd8f1;
+}
+
+.term-content ul, .term-content ol {
+  margin: 12px 0 12px 20px;
+}
+
+.term-content li {
+  margin-bottom: 8px;
+}
+
+/* para citações ou destaques */
+.term-content blockquote {
+  border-left: 4px solid var(--accent);
+  padding-left: 16px;
+  margin: 16px 0;
+  color: #a0c4ff;
+  font-style: italic;
+  background: #0a1623;
+}
+
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      left: 0; right: 0;
+      height: 180px;
+      z-index: 0;
+      pointer-events: none;
+    }
+    body::before {
+      top: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.85), transparent);
+    }
+    body::after {
+      bottom: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+    }
+
+    header, main, footer {
+      position: relative;
+      z-index: 1;
+    }
+
+    footer {
+      padding: 24px 6vw;
+      color: #ffffff;
+      text-align: center;
+      background: rgba(0,0,0,0.75);  
+      border-top: 1px solid #00e5ff;
+    }
+    footer p {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.2rem; 
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      margin: 0;
+      color: #f5f5f5;
+      text-shadow: 0 0 10px rgba(0,0,0,0.9);
+    }
+  </style>
+</head>
+<body>
+  <div class="grid"></div>
+
+  <header>
+    <div class="badge">Aplicación web con LLM y Flask</div>
+    <h1>Tutor Interactivo de Programación</h1>
+    <div class="subtitle">Tu guía interactiva en programación, ciencia de datos y machine learning</div>
+  </header>
+
+  <main>
+    <section class="card">
+      <div class="row">
+        <input id="pregunta" class="input" type="text" maxlength="2000"
+               placeholder="Escribe tu pregunta técnica (Python, SQL, ETL, Data Engineering)..." />
+        <button class="btn" id="enviar">ENVIAR ▸</button>
+      </div>
+
+      <!-- status de processamento -->
+      <div class="status" id="estado">⏳ Procesando tu pregunta...</div>
+
+      <div class="terminal" id="terminal" style="display:none;">
+        <div class="term-bar">
+          <div class="term-title">/consola — Tutor LLM</div>
+        </div>
+        <div class="term-content" id="respuesta"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Desarrollado por <strong>Renan Muniz</strong></p>
+  </footer>
+
+  <script>
+    const input = document.getElementById('pregunta');
+    const enviar = document.getElementById('enviar');
+    const terminal = document.getElementById('terminal');
+    const respuesta = document.getElementById('respuesta');
+    const estado = document.getElementById('estado');
+
+    function show(el){ el.style.display = ''; }
+    function hide(el){ el.style.display = 'none'; }
+
+    async function hacerPregunta(){
+      const pregunta = input.value.trim();
+      if(!pregunta){ 
+        alert("Por favor, escribe una pregunta primero."); 
+        return; 
+      }
+
+      hide(terminal);
+      show(estado);
+
+      try{
+        const res = await fetch('/tutor',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ pregunta })
+        });
+
+        const data = await res.json();
+
+        hide(estado);
+        show(terminal);
+
+        if(data.error){
+          respuesta.innerHTML = `<p><strong>Error:</strong> ${data.error}</p>`;
+          return;
+        }
+
+        const md = `### Pregunta\n${data.pregunta}\n\n### Respuesta\n${data.respuesta}`;
+        respuesta.innerHTML = marked.parse(md);
+
+        terminal.scrollIntoView({behavior:'smooth', block:'start'});
+        input.value = '';
+      }catch(err){
+        hide(estado);
+        show(terminal);
+        respuesta.innerHTML = `<p><strong>Error de red:</strong> ${err?.message || err}</p>`;
+      }
+    }
+
+    enviar.addEventListener('click', hacerPregunta);
+    input.addEventListener('keydown', (e)=>{ if(e.key==='Enter') hacerPregunta(); });
+  </script>
+</body>
+</html>
