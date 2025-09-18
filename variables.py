@@ -3,11 +3,11 @@ import os
 os.environ['KEY_GROQ'] = "API_KEY"
 
 config = {
-    "host":"test.c61uo00q232v.us-east-1.rds.amazonaws.com",
-    "user":"postgres",
+    "host":"",
+    "user":"",
     "password":".",
-    "port":"5432",
-    "dbname":"postgres"
+    "port":"",
+    "dbname":""
 
 }
 
